@@ -2,6 +2,8 @@ const express = require("express")
 const multer = require("multer")
 const path = require("path");
 const app = express()
+const fs = require('fs');
+const controller = require("./fileController")
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
@@ -27,6 +29,16 @@ const storage = multer.diskStorage({
     console.log(req.files)
     return res.send("Multiple files")
   })
+  
+  app.get("/files",function(req,res){
+    console.log("Getting file list from controller ...");
+    controller.getListFiles(req,res);
+})
+
+app.get("/files/:name",function(req,res){
+    console.log("Downloading file from controller ...");
+    controller.download(req,res);
+})
   app.listen(5000 || process.env.PORT, () => {
     console.log("Server on...")
   })
